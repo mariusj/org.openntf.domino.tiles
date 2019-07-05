@@ -2,6 +2,9 @@ package org.openntf.tiles.config;
 
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -17,6 +20,8 @@ public final class DBPath implements Serializable {
     private final String path;
     private final String web;
 
+    private final List<String> servers;
+
     /**
      * Constructs a new instance of {@link DBPath}.
      *
@@ -31,10 +36,35 @@ public final class DBPath implements Serializable {
         this.server = server;
         this.path = path;
         this.web = web;
+        this.servers = Collections.unmodifiableList(Arrays.asList(server));
+    }
+
+    /**
+     * Constructs a new instance of {@link DBPath}.
+     * This constructor includes a list of servers. The preferred server
+     * should be included as first in the list. Is is then returned in 
+     * {@link #getServer()}.
+     *
+     * @param servers
+     *            a list of servers
+     * @param path
+     *            path to a database
+     * @param web
+     *            optional web path
+     */
+    public DBPath(List<String> servers, String path, String web) {
+        this.path = path;
+        this.web = web;
+        this.servers = Collections.unmodifiableList(servers);
+        this.server = servers.get(0);
     }
 
     public String getServer() {
         return server;
+    }
+
+    public List<String> getServers() {
+        return servers;
     }
 
     public String getPath() {

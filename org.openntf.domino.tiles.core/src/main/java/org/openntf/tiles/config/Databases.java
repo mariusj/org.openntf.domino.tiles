@@ -1,6 +1,9 @@
 package org.openntf.tiles.config;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import org.openntf.domino.Document;
@@ -62,12 +65,22 @@ public class Databases extends HashMap<String, DBPath> {
      */
     private DBPath cacheDBPath(final Document cfg, final String key) {
         String path = cfg.getItemValueString(key + "DB");
-        String server = cfg.getItemValueString(key + "Server");
-        if (server == null || server == "") {
-            server = cfg.getParentDatabase().getServer();
+        
+        List<String> servers = cfg.getItemValues(key + "Server", String.class);
+        String currentServer = cfg.getParentDatabase().getServer();
+        if (servers == null || servers.isEmpty() || "".equals(servers.get(0))) {
+            servers = Arrays.asList(currentServer); 
+        } else {
+            Collections.replaceAll(servers, "current", currentServer);
+            // make current server first in the list
+            int currentIdx = servers.indexOf(currentServer);
+            if (currentIdx > 0) {
+                Collections.swap(servers, 0, currentIdx);
+            }
         }
         String web = cfg.getItemValueString(key + "Web");
-        return new DBPath(server, path, web);
+        
+        return new DBPath(servers, path, web);
     }
 
 }
