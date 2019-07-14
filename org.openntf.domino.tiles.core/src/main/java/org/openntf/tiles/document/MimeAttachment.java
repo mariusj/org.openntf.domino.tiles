@@ -43,6 +43,7 @@ public class MimeAttachment extends Attachment {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(length);
         stream.getContents(baos);
         bais = new ByteArrayInputStream(baos.toByteArray());
+        stream.close();
     }
 
     @Override
