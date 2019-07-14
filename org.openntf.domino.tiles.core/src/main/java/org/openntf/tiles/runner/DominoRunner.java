@@ -54,10 +54,24 @@ public class DominoRunner {
     }
     
     /**
+     * Shutdown the ODA.
+     */
+    public static void shutdown() {
+        synchronized (Factory.class) {
+            if (Factory.isStarted()) {
+                Factory.shutdown();
+            }            
+        }
+    }
+    
+    /**
      * Initializes the Domino thread/
      */
     public static void initThread() {
         LOG.info("initializing Domino thread");
+        if (!Factory.isStarted()) {
+            Factory.startup();
+        }
         Factory.initThread(Factory.STRICT_THREAD_CONFIG);
         Factory.setSessionFactory(
                 Factory.getSessionFactory(SessionType.NATIVE), 
