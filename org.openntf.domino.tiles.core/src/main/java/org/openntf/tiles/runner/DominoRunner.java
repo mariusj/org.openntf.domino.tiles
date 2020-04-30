@@ -121,9 +121,9 @@ public class DominoRunner {
      * Initializes the Domino thread/
      */
     public static void initThread() {
-        LOG.info("initializing Domino thread");
+        LOG.trace("initializing Domino thread");
         if (!Factory.isStarted()) {
-            LOG.info("starting Domino factory");
+            LOG.trace("starting Domino factory");
             Factory.startup();
         }
         Factory.initThread(Factory.STRICT_THREAD_CONFIG);
@@ -134,7 +134,7 @@ public class DominoRunner {
                 Factory.getSessionFactory(SessionType.NATIVE),
                 SessionType.SIGNER);
         
-        LOG.info("init thread");
+        LOG.trace("init thread");
         NotesThread.sinitThread();
     }
 
@@ -142,7 +142,7 @@ public class DominoRunner {
      * Cleans up a thread running a Domino connection.
      */
     public static void termThread() {
-        LOG.info("terminating Domino thread");
+        LOG.trace("terminating Domino thread");
         NotesThread.stermThread();
         Factory.termThread();
     }
