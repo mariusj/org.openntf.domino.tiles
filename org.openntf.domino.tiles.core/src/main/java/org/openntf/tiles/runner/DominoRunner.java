@@ -78,7 +78,11 @@ public class DominoRunner {
                 Factory.startup();
 
                 LOG.info("initializing Domino C API");
-                com.ibm.domino.napi.c.C.initLibrary(null);
+                try {
+                	com.ibm.domino.napi.c.C.initLibrary(null);
+                } catch (Throwable e) {
+                	e.printStackTrace();
+                }
                  
                 LOG.info("waiting for Domino session initialization");
                 notesLocker = new NotesLockerThread();
@@ -118,7 +122,7 @@ public class DominoRunner {
     }
     
     /**
-     * Initializes the Domino thread/
+     * Initializes the Domino thread.
      */
     public static void initThread() {
         LOG.trace("initializing Domino thread");
