@@ -1,5 +1,6 @@
 package org.openntf.tiles.document;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +63,7 @@ public class DocumentUtils {
             final String fileName) {
         Session session = doc.getParentDatabase().getParent();
         Stream stream = session.createStream();
-        stream.write(bytes);
+        stream.setContents(new ByteArrayInputStream(bytes));
         addMIMEAttachment(doc, fieldName, stream, fileName);
     }
 
