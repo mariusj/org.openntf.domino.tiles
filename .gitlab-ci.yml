@@ -10,3 +10,5 @@ cache:
 
 deploy_mvn:
   extends: .deploy_mvn
+  script:
+    - mvn $MAVEN_CLI_OPTS -f org.openntf.domino.tiles.core/pom.xml deploy
