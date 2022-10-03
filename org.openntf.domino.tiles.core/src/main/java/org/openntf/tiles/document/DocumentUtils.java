@@ -68,6 +68,24 @@ public class DocumentUtils {
     }
 
     /**
+     * Sanitizes the file name.
+     * @param fileName
+     * @return
+     */
+    private static String sanitizeFileName(String fileName) {
+		return fileName
+				.replace('"', ' ')
+				.replace('\\', '_')
+				.replace('/', '_')
+				.replace(':', '_')
+				.replace('*', '_')
+				.replace('?', '_')
+				.replace('<', '_')
+				.replace('>', '_')
+				.replace('|', '_');
+	}
+
+	/**
      * Saves an attachment in a MIME field. If that field already exists and is
      * in mime format, the attachment is appended to that field. Otherwise a new
      * field is created.
@@ -125,17 +143,18 @@ public class DocumentUtils {
 
         MIMEEntity att = body.createChildEntity();
         att.setContentFromBytes(stream, Attachment.guessMIME(fileName), MIMEEntity.ENC_IDENTITY_BINARY);
+        String safeFileName = sanitizeFileName(fileName); 
         MIMEHeader header = att.createHeader("Content-Disposition");
         String fileNameB;
         try {
-            fileNameB = "=?UTF-8?B?" + Base64.encodeBase64String(fileName.getBytes("UTF-8")) + "?=";
+            fileNameB = "=?UTF-8?B?" + Base64.encodeBase64String(safeFileName.getBytes("UTF-8")) + "?=";
         } catch (UnsupportedEncodingException e) {
-            fileNameB = fileName;
+            fileNameB = safeFileName;
             e.printStackTrace();
         }
         header.setHeaderVal("attachment; filename=\"" + fileNameB + "\"");
         header = att.createHeader("Content-ID");
-        header.setHeaderVal(fileName);
+        header.setHeaderVal(safeFileName);
         doc.closeMIMEEntities(true, fieldName);
         stream.close();
     }
